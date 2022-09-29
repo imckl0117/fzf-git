@@ -1,0 +1,145 @@
+#!/bin/bash
+
+git_add() {
+	git add .
+}
+
+git_add_updated() {
+	git add -u
+}
+
+git_branch() {
+	GIT_PAGER= git branch
+}
+
+git_checkout() {
+	GIT_PAGER= git branch -a | awk '{ print substr($0, 3) }' | grep -v -- '->' | fzf --height=30% | sed 's/remotes\/.*\///g' | xargs git checkout
+}
+
+git_checkout_local() {
+	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | grep -v -- '->' | sed 's/remotes\/.*\///g' | fzf --height=30% | xargs git checkout
+}
+
+git_create_branch() {
+	read -p 'Branch name: ' branch
+
+	[[ -z "$branch" ]] && return
+
+	git checkout -b "$branch"
+
+	unset branch
+}
+
+git_commit() {
+	git commit
+}
+
+git_diff() {
+	git diff
+}
+
+git_diff_staged() {
+	git diff --staged
+}
+
+git_delete_branch() {
+	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | grep -v -- '->' | fzf --height=30% -m | xargs git branch -d
+}
+
+git_log() {
+	git log
+}
+
+git_push() {
+	git push
+}
+
+git_push_upstream() {
+	git push -u origin HEAD
+}
+
+git_rebase_main() {
+	branch="$(GIT_PAGER= git branch | grep '\*' | awk '{ print substr($0, 3) }')"
+
+	git checkout main
+
+	git pull
+
+	git checkout "$branch"
+
+	git rebase main
+
+	unset branch
+}
+
+git_rebase_main_multi() {
+	branches="$(GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | grep -v -- '->' | sed 's/remotes\/.*\///g' | fzf --height=30% -m)"
+
+	[[ -z "$branches" ]] && return
+
+	echo "$branches" | while read branch
+		do
+			echo "Rebasing branch $branch"
+
+			git checkout main
+
+			git pull
+
+			git checkout "$branch"
+
+			git rebase main
+		done
+
+unset $branches
+}
+
+git_rename_branch() {
+	branch="$(GIT_PAGER= git branch | grep '\*' | awk '{ print substr($0, 3) }')"
+
+	echo "Renaming branch $branch"
+
+	read -p 'New branch name: ' rename
+
+	[[ -z "$rename" ]] && return
+
+	git branch -m "$rename"
+
+	unset branch
+}
+
+git_reset() {
+	git reset
+}
+
+git_reset_hard() {
+	read -n 1 -p 'Are you sure? [y/Y/n/N] ' opt
+
+	case "$opt" in
+		[nN])
+			echo
+			return
+			;;
+		[yY])
+			echo
+			git reset --hard
+			;;
+		*)
+			echo
+			echo "Unknown option $opt"
+			;;
+	esac
+
+	unset opt
+}
+
+git_status() {
+	git status
+}
+
+cmd="$(echo 'add add-updated branch checkout checkout-local create-branch commit delete-branch diff diff-staged log push push-upstream rebase-main rebase-main-multi rename-branch reset reset-hard status' | sed 's/\ /\n/g' | fzf --height=30%)"
+
+[[ -z "$cmd" ]] && exit 1
+
+"git_$(echo $cmd | sed 's/-/_/g')"
+
+unset cmd
