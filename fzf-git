@@ -17,7 +17,7 @@ git_checkout() {
 }
 
 git_checkout_local() {
-	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | grep -v -- '->' | sed 's/remotes\/.*\///g' | fzf --height=30% | xargs git checkout
+	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | fzf --height=30% | xargs git checkout
 }
 
 git_create_branch() {
