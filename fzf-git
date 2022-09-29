@@ -58,6 +58,27 @@ git_checkout_local() {
 	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | fzf --height=30% | xargs git checkout
 }
 
+git_clean() {
+	read -n 1 -p 'Are you sure? [y/Y/n/N] ' opt
+
+	case "$opt" in
+		[nN])
+			echo
+			return
+			;;
+		[yY])
+			echo
+			git clean -fd
+			;;
+		*)
+			echo
+			echo "Unknown option $opt"
+			;;
+	esac
+
+	unset opt
+}
+
 git_create_branch() {
 	read -p 'Branch name: ' branch
 
@@ -174,7 +195,7 @@ git_status() {
 	git status
 }
 
-cmd="$(echo 'add add-updated branch checkout checkout-local create-branch commit delete-branch diff diff-staged log push push-upstream rebase-main rebase-main-multi rename-branch reset reset-hard status' | sed 's/\ /\n/g' | fzf --height=30%)"
+cmd="$(echo 'add add-updated branch checkout checkout-local clean create-branch commit delete-branch diff diff-staged log push push-upstream rebase-main rebase-main-multi rename-branch reset reset-hard status' | sed 's/\ /\n/g' | fzf --height=30%)"
 
 [[ -z "$cmd" ]] && exit 1
 
