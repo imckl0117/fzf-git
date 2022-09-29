@@ -28,12 +28,7 @@ git_add_some() {
 
 	[[ -z "$files" ]] && return
 
-	echo "$files" | while read file
-		do
-			git add "$file"
-		done
-
-	unset files
+	echo "$files" | xargs git add
 
 	read -n 1 -p 'Commit now? [y/Y/n/N] ' opt
 
