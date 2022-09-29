@@ -23,6 +23,38 @@ git_add() {
 	unset opt
 }
 
+git_add_some() {
+	files="$(git ls-files -mo | fzf --height=30% -m)"
+
+	[[ -z "$files" ]] && return
+
+	echo "$files" | while read file
+		do
+			git add "$file"
+		done
+
+	unset files
+
+	read -n 1 -p 'Commit now? [y/Y/n/N] ' opt
+
+	case "$opt" in
+		[nN])
+			echo
+			return
+			;;
+		[yY])
+			echo
+			git commit
+			;;
+		*)
+			echo
+			echo "Unknown option $opt"
+			;;
+	esac
+
+	unset opt
+}
+
 git_add_updated() {
 	git add -u
 
@@ -195,7 +227,7 @@ git_status() {
 	git status
 }
 
-cmd="$(echo 'add add-updated branch checkout checkout-local clean create-branch commit delete-branch diff diff-staged log push push-upstream rebase-main rebase-main-multi rename-branch reset reset-hard status' | sed 's/\ /\n/g' | fzf --height=30%)"
+cmd="$(echo 'add add-some add-updated branch checkout checkout-local clean create-branch commit delete-branch diff diff-staged log push push-upstream rebase-main rebase-main-multi rename-branch reset reset-hard status' | sed 's/\ /\n/g' | fzf --height=30%)"
 
 [[ -z "$cmd" ]] && exit 1
 
