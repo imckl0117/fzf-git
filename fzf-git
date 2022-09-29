@@ -37,17 +37,16 @@ git_add_some() {
 
 	read -n 1 -p 'Commit now? [y/Y/n/N] ' opt
 
+	echo
+
 	case "$opt" in
 		[nN])
-			echo
 			return
 			;;
 		[yY])
-			echo
 			git commit
 			;;
 		*)
-			echo
 			echo "Unknown option $opt"
 			;;
 	esac
@@ -134,7 +133,7 @@ git_diff_staged() {
 }
 
 git_delete_branch() {
-	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | grep -v -- '->' | fzf --height=30% -m | xargs git branch -d
+	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | fzf --height=30% -m | xargs git branch -d
 }
 
 git_log() {
