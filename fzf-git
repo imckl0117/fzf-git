@@ -24,7 +24,7 @@ git_add() {
 }
 
 git_add_some() {
-	files="$(git ls-files -mo | fzf --height=30% -m)"
+	files="$(git status --porcelain=v1 | awk '{ print $2 }' | fzf --height=30% -m)"
 
 	[[ -z "$files" ]] && return
 
