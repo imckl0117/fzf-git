@@ -2,10 +2,48 @@
 
 git_add() {
 	git add .
+
+	read -n 1 -p 'Commit now? [y/Y/n/N] ' opt
+
+	case "$opt" in
+		[nN])
+			echo
+			return
+			;;
+		[yY])
+			echo
+			git commit
+			;;
+		*)
+			echo
+			echo "Unknown option $opt"
+			;;
+	esac
+
+	unset opt
 }
 
 git_add_updated() {
 	git add -u
+
+	read -n 1 -p 'Commit now? [y/Y/n/N] ' opt
+
+	case "$opt" in
+		[nN])
+			echo
+			return
+			;;
+		[yY])
+			echo
+			git commit
+			;;
+		*)
+			echo
+			echo "Unknown option $opt"
+			;;
+	esac
+
+	unset opt
 }
 
 git_branch() {
