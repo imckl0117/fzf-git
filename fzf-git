@@ -90,7 +90,7 @@ git_rebase_main_multi() {
 			git rebase main
 		done
 
-unset $branches
+	unset $branches
 }
 
 git_rename_branch() {
