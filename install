@@ -1,0 +1,59 @@
+#!/bin/bash
+
+bindir="$HOME/.local/bin"
+
+[[ ! -d "$bindir" ]] && {
+	mkdir "$bindir" || exit 1
+}
+
+[[ -f "$bindir/g" ]] && {
+	read -n 1 -p "$bindir/g exists, overwrite? [y/Y/n/N] " opt
+
+	echo
+
+	case "$opt" in
+		[yY])
+			;;
+		[nN])
+			exit 0
+			;;
+		*)
+			echo "Unknown option $opt"
+			exit 1
+			;;
+	esac
+
+	unset opt
+}
+
+cp fzf-git "$bindir/g" || exit 1
+
+[[ "$PATH" != *$bindir* ]] && {
+	read -n 1 -p "$bindir is not in \$PATH, setup now? [y/Y/n/N] " opt
+
+	echo
+
+	case "$opt" in
+		[yY])
+			[[ "$SHELL" = '/bin/bash' ]] && {
+				echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc" || exit 1
+			}
+
+			[[ "$SHELL" = '/bin/zsh' ]] && {
+				echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.zshrc" || exit 1
+			}
+
+			;;
+		[nN])
+			exit 0
+			;;
+		*)
+			echo "Unknown option $opt"
+			exit 1
+			;;
+	esac
+
+	unset opt
+}
+
+unset bindir
