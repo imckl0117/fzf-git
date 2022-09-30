@@ -5,17 +5,16 @@ git_add() {
 
 	read -n 1 -p 'Commit now? [y/Y/n/N] ' opt
 
+	echo
+
 	case "$opt" in
 		[nN])
-			echo
 			return
 			;;
 		[yY])
-			echo
 			git commit
 			;;
 		*)
-			echo
 			echo "Unknown option $opt"
 			;;
 	esac
@@ -54,17 +53,16 @@ git_add_updated() {
 
 	read -n 1 -p 'Commit now? [y/Y/n/N] ' opt
 
+	echo
+
 	case "$opt" in
 		[nN])
-			echo
 			return
 			;;
 		[yY])
-			echo
 			git commit
 			;;
 		*)
-			echo
 			echo "Unknown option $opt"
 			;;
 	esac
@@ -87,17 +85,16 @@ git_checkout_local() {
 git_clean() {
 	read -n 1 -p 'Are you sure? [y/Y/n/N] ' opt
 
+	echo
+
 	case "$opt" in
 		[nN])
-			echo
 			return
 			;;
 		[yY])
-			echo
 			git clean -fd
 			;;
 		*)
-			echo
 			echo "Unknown option $opt"
 			;;
 	esac
@@ -199,17 +196,16 @@ git_reset() {
 git_reset_hard() {
 	read -n 1 -p 'Are you sure? [y/Y/n/N] ' opt
 
+	echo
+
 	case "$opt" in
 		[nN])
-			echo
 			return
 			;;
 		[yY])
-			echo
 			git reset --hard
 			;;
 		*)
-			echo
 			echo "Unknown option $opt"
 			;;
 	esac
