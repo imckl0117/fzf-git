@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export FZF_DEFAULT_OPTS='--bind=pgdn:preview-page-down,pgup:preview-page-up --border --layout=reverse'
+
 git_add() {
 	git add .
 
@@ -23,7 +25,7 @@ git_add() {
 }
 
 git_add_some() {
-	files="$(git status --porcelain=v1 | awk '{ print $2 }' | fzf --border --layout=reverse -m --preview='git diff {}')"
+	files="$(git status --porcelain=v1 | awk '{ print $2 }' | fzf -m --preview='git diff {}')"
 
 	[[ -z "$files" ]] && return
 
@@ -75,11 +77,11 @@ git_branch() {
 }
 
 git_checkout() {
-	GIT_PAGER= git branch -a | awk '{ print substr($0, 3) }' | grep -v -- '->' | fzf --border --height=50% --layout=reverse | sed 's/remotes\/origin\///g' | xargs git checkout
+	GIT_PAGER= git branch -a | awk '{ print substr($0, 3) }' | grep -v -- '->' | fzf --height=50% | sed 's/remotes\/origin\///g' | xargs git checkout
 }
 
 git_checkout_local() {
-	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | fzf --border --height=50% --layout=reverse | xargs git checkout
+	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | fzf --height=50% | xargs git checkout
 }
 
 git_clean() {
@@ -125,7 +127,7 @@ git_diff_staged() {
 }
 
 git_delete_branch() {
-	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | fzf --border --height=50% --layout=reverse -m | xargs git branch -d
+	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | fzf --height=50% -m | xargs git branch -d
 }
 
 git_log() {
@@ -133,7 +135,7 @@ git_log() {
 }
 
 git_log_preview() {
-	git log --format='format:%h, %s, by %an' | fzf --border --layout=reverse --preview='echo {} | cut -d , -f 1 | xargs git show' | cut -d , -f 1 | pbcopy
+	git log --format='format:%h, %s, by %an' | fzf --preview='echo {} | cut -d , -f 1 | xargs git show' | cut -d , -f 1 | pbcopy
 }
 
 git_push() {
@@ -159,7 +161,7 @@ git_rebase_main() {
 }
 
 git_rebase_main_multi() {
-	branches="$(GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | sed 's/remotes\/.*\///g' | fzf --border --height=50% --layout=reverse -m)"
+	branches="$(GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | sed 's/remotes\/.*\///g' | fzf --height=50% -m)"
 
 	[[ -z "$branches" ]] && return
 
@@ -218,17 +220,19 @@ git_reset_hard() {
 }
 
 git_reset_some() {
-	git ls-files -m | fzf --border --layout=reverse -m --preview='git diff {}' | xargs git checkout --
+	git ls-files -m | fzf -m --preview='git diff {}' | xargs git checkout --
 }
 
 git_status() {
 	git status
 }
 
-cmd="$(echo 'add add-some add-updated branch checkout checkout-local clean create-branch commit delete-branch diff diff-staged log log-preview push push-upstream rebase-main rebase-main-multi rename-branch reset reset-hard reset-some status' | sed 's/\ /\n/g' | fzf --border --height=50% --layout=reverse)"
+cmd="$(echo 'add add-some add-updated branch checkout checkout-local clean create-branch commit delete-branch diff diff-staged log log-preview push push-upstream rebase-main rebase-main-multi rename-branch reset reset-hard reset-some status' | sed 's/\ /\n/g' | fzf --height=50%)"
 
 [[ -z "$cmd" ]] && exit 1
 
 "git_$(echo $cmd | sed 's/-/_/g')"
 
 unset cmd
+
+unset FZF_DEFAULT_OPTS
