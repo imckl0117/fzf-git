@@ -3,7 +3,7 @@
 bindir="$HOME/.local/bin"
 
 [[ ! -d "$bindir" ]] && {
-	mkdir "$bindir" || exit 1
+	mkdir -p "$bindir" || exit 1
 }
 
 [[ -f "$bindir/g" ]] && {
