@@ -159,7 +159,7 @@ git_rebase_main() {
 }
 
 git_rebase_main_multi() {
-	branches="$(GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | grep -v -- '->' | sed 's/remotes\/.*\///g' | fzf --border --height=50% --layout=reverse -m)"
+	branches="$(GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | sed 's/remotes\/.*\///g' | fzf --border --height=50% --layout=reverse -m)"
 
 	[[ -z "$branches" ]] && return
 
