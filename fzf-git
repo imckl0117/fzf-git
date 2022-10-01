@@ -23,7 +23,7 @@ git_add() {
 }
 
 git_add_some() {
-	files="$(git status --porcelain=v1 | awk '{ print $2 }' | fzf --height=30% -m)"
+	files="$(git status --porcelain=v1 | awk '{ print $2 }' | fzf --border --height=50% --layout=reverse -m --preview='git diff {}')"
 
 	[[ -z "$files" ]] && return
 
@@ -75,11 +75,11 @@ git_branch() {
 }
 
 git_checkout() {
-	GIT_PAGER= git branch -a | awk '{ print substr($0, 3) }' | grep -v -- '->' | fzf --height=30% | sed 's/remotes\/origin\///g' | xargs git checkout
+	GIT_PAGER= git branch -a | awk '{ print substr($0, 3) }' | grep -v -- '->' | fzf --border --height=50% --layout=reverse | sed 's/remotes\/origin\///g' | xargs git checkout
 }
 
 git_checkout_local() {
-	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | fzf --height=30% | xargs git checkout
+	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | fzf --border --height=50% --layout=reverse | xargs git checkout
 }
 
 git_clean() {
@@ -125,7 +125,7 @@ git_diff_staged() {
 }
 
 git_delete_branch() {
-	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | fzf --height=30% -m | xargs git branch -d
+	GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | fzf --border --height=50% --layout=reverse -m | xargs git branch -d
 }
 
 git_log() {
@@ -155,7 +155,7 @@ git_rebase_main() {
 }
 
 git_rebase_main_multi() {
-	branches="$(GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | grep -v -- '->' | sed 's/remotes\/.*\///g' | fzf --height=30% -m)"
+	branches="$(GIT_PAGER= git branch | awk '{ print substr($0, 3) }' | grep -v -- '->' | sed 's/remotes\/.*\///g' | fzf --border --height=50% --layout=reverse -m)"
 
 	[[ -z "$branches" ]] && return
 
@@ -217,7 +217,7 @@ git_status() {
 	git status
 }
 
-cmd="$(echo 'add add-some add-updated branch checkout checkout-local clean create-branch commit delete-branch diff diff-staged log push push-upstream rebase-main rebase-main-multi rename-branch reset reset-hard status' | sed 's/\ /\n/g' | fzf --height=30%)"
+cmd="$(echo 'add add-some add-updated branch checkout checkout-local clean create-branch commit delete-branch diff diff-staged log push push-upstream rebase-main rebase-main-multi rename-branch reset reset-hard status' | sed 's/\ /\n/g' | fzf --border --height=50% --layout=reverse)"
 
 [[ -z "$cmd" ]] && exit 1
 
