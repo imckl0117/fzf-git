@@ -23,7 +23,7 @@ git_add() {
 }
 
 git_add_some() {
-	files="$(git status --porcelain=v1 | awk '{ print $2 }' | fzf --border --height=50% --layout=reverse -m --preview='git diff {}')"
+	files="$(git status --porcelain=v1 | awk '{ print $2 }' | fzf --border --layout=reverse -m --preview='git diff {}')"
 
 	[[ -z "$files" ]] && return
 
@@ -132,6 +132,10 @@ git_log() {
 	git log
 }
 
+git_log_preview() {
+	git log --format='format:%h, %s, by %an' | fzf --border --layout=reverse --preview='echo {} | cut -d , -f 1 | xargs git show' | cut -d , -f 1 | pbcopy
+}
+
 git_push() {
 	git push
 }
@@ -214,14 +218,14 @@ git_reset_hard() {
 }
 
 git_reset_some() {
-	git ls-files -m | fzf --border --height=50% --layout=reverse -m --preview='git diff {}' | xargs git checkout --
+	git ls-files -m | fzf --border --layout=reverse -m --preview='git diff {}' | xargs git checkout --
 }
 
 git_status() {
 	git status
 }
 
-cmd="$(echo 'add add-some add-updated branch checkout checkout-local clean create-branch commit delete-branch diff diff-staged log push push-upstream rebase-main rebase-main-multi rename-branch reset reset-hard reset-some status' | sed 's/\ /\n/g' | fzf --border --height=50% --layout=reverse)"
+cmd="$(echo 'add add-some add-updated branch checkout checkout-local clean create-branch commit delete-branch diff diff-staged log log-preview push push-upstream rebase-main rebase-main-multi rename-branch reset reset-hard reset-some status' | sed 's/\ /\n/g' | fzf --border --height=50% --layout=reverse)"
 
 [[ -z "$cmd" ]] && exit 1
 
