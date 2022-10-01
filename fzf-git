@@ -213,11 +213,15 @@ git_reset_hard() {
 	unset opt
 }
 
+git_reset_some() {
+	git ls-files -m | fzf --border --height=50% --layout=reverse -m --preview='git diff {}' | xargs git checkout --
+}
+
 git_status() {
 	git status
 }
 
-cmd="$(echo 'add add-some add-updated branch checkout checkout-local clean create-branch commit delete-branch diff diff-staged log push push-upstream rebase-main rebase-main-multi rename-branch reset reset-hard status' | sed 's/\ /\n/g' | fzf --border --height=50% --layout=reverse)"
+cmd="$(echo 'add add-some add-updated branch checkout checkout-local clean create-branch commit delete-branch diff diff-staged log push push-upstream rebase-main rebase-main-multi rename-branch reset reset-hard reset-some status' | sed 's/\ /\n/g' | fzf --border --height=50% --layout=reverse)"
 
 [[ -z "$cmd" ]] && exit 1
 
